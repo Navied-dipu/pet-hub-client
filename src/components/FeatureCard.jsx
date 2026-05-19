@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import React from 'react'
 
 export default function FeatureCard({ pet }) {
@@ -12,11 +13,11 @@ export default function FeatureCard({ pet }) {
                 😸
             </figure>
 
-            <div className="card-body">
+            <div className="card-body text-black">
                 <h2 className="card-title flex justify-between items-center">
                     {name}
                     <div
-                        className="badge border-none "
+                        className="badge border-none text-black"
                         style={{ backgroundColor: "#FEF08A" }}
                     >
                         {type}
@@ -47,7 +48,7 @@ export default function FeatureCard({ pet }) {
                         </div>
                     ))}
                 </div>
-                <button>View Details</button>
+                <button className='btn'>View Details</button>
             </div>
         </div>
     )
