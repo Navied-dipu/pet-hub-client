@@ -1,5 +1,6 @@
 "use client";
 
+import AddPetPage from "@/components/Dashboard/AddPetPage";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -27,14 +28,15 @@ const DashboardPage = () => {
                         </div>
                     )}
 
-                    {content === "Profile" && (
+                    {content === "ADD" && (
                         <div>
                             <h2 className="text-3xl font-bold">Profile Content</h2>
                             <p>This is profile page content.</p>
+                            <AddPetPage></AddPetPage>
                         </div>
                     )}
 
-                    {content === "Settings" && (
+                    {content === "MyListing" && (
                         <div>
                             <h2 className="text-3xl font-bold">Settings Content</h2>
                             <p>This is settings page content.</p>
@@ -58,14 +60,14 @@ const DashboardPage = () => {
                         </li>
 
                         <li>
-                            <button onClick={() => setContent("Profile")}>
-                                Profile
+                            <button onClick={() => setContent("ADD")}>
+                                Add Pet
                             </button>
                         </li>
 
                         <li>
-                            <button onClick={() => setContent("Settings")}>
-                                Settings
+                            <button onClick={() => setContent("MyListing")}>
+                                My Listings 
                             </button>
                         </li>
                         <li><Link href={'/'}>Back to Home</Link></li>

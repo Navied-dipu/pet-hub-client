@@ -18,7 +18,7 @@ const LoginPage = () => {
       email: user.email,
       password: user.password,
     });
-console.log(data)
+// console.log(data)
     if (data) {
       alert('login sucessfuly')
       router.push("/");

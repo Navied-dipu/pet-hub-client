@@ -9,7 +9,7 @@ export default function Navbar() {
     const { data: session, isPending } = authClient.useSession();
     console.log(session)
     const user = session?.user;
-    console.log(user)
+    // console.log(user)
     const pathname = usePathname();
 
     const handleSignOut = async () => {
@@ -57,7 +57,7 @@ export default function Navbar() {
                             <div className="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
                                 <Image
                                     alt={user.name ?? 'User avatar'}
-                                    src={user.image ?? 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'}
+                                    src={user.image || 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'}
                                     referrerPolicy="no-referrer"
                                     width={40}
                                     height={40}
