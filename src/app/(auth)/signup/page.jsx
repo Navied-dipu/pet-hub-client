@@ -150,8 +150,9 @@ const SignUpPage = () => {
         <Button
           onClick={handleGoogleSignin}
           variant="bordered"
-          className="w-full rounded-none"
+          className="w-full rounded-none flex justify-center items-center"
           isDisabled={loading}
+          
         >
           <FcGoogle /> Sign up with Google
         </Button>
