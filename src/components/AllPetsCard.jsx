@@ -17,7 +17,7 @@ export default function AllPetsCard({ pet }) {
     location,
     description,
   } = pet;
-// console.log(pet)
+  // console.log(pet)
   return (
 
     <div className="card w-80 bg-base-100 text-white shadow-xl border">
@@ -73,9 +73,12 @@ export default function AllPetsCard({ pet }) {
 
         {/* Button */}
         <div className="card-actions mt-3">
-          <button className="btn btn-primary btn-sm w-full">
-          <Link href={`allpets/${_id}`}>  View Details</Link>
-          </button>
+          <Link
+            href={`/allpets/${_id}`}
+            className="btn btn-primary btn-sm w-full"
+          >
+            View Details
+          </Link>
         </div>
 
       </div>
