@@ -1,6 +1,7 @@
-import { betterAuth } from "better-auth";
 import { MongoClient } from "mongodb";
+import { betterAuth } from "better-auth";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
+import { jwt } from "better-auth/plugins";
 
 const uri = process.env.MONGO_URI;
 
@@ -9,6 +10,8 @@ if (!uri) {
 }
 
 const client = new MongoClient(uri);
+
+await client.connect();
 
 const db = client.db("petHub");
 
@@ -27,4 +30,18 @@ export const auth = betterAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     },
   },
+
+  session: {
+    cookieCache: {
+      enabled: true,
+      strategy: "jwt",
+      maxAge: 7 * 24 * 60 * 60,
+    },
+  },
+
+  advanced: {
+    trustHost: true,
+  },
+
+  plugins: [jwt()],
 });

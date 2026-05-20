@@ -20,6 +20,7 @@ import {
   FiAlertCircle,
 } from "react-icons/fi";
 
+
 const PetDetailsPage = () => {
   const router = useRouter();
   const params = useParams();
@@ -49,9 +50,15 @@ const PetDetailsPage = () => {
     if (!id) return;
 
     const fetchPetDetails = async () => {
+      
+      const token = await authClient.getToken()
       try {
         setPetLoading(true);
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pets/${id}`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pets/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         if (!res.ok) {
           throw new Error("Failed to load pet details");
         }
