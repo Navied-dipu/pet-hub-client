@@ -1,55 +1,84 @@
-import Link from 'next/link'
-import React from 'react'
+import Image from "next/image";
+import Link from "next/link";
 
-export default function FeatureCard({ pet }) {
-    const { name, type, breed, age, gender, location, description } = pet
+export default function AllPetsCard({ pet }) {
+  const {
+    _id,
+    petName,
+    species,
+    breed,
+    age,
+    gender,
+    image,
+    healthStatus,
+    vaccinationStatus,
+    location,
+    description,
+  } = pet;
+  // console.log(pet)
+  return (
+    <div className="card  bg-base-100 text-white shadow-xl border">
 
-    return (
-        <div
-            className="card w-96 shadow-sm text-black"
-            style={{ backgroundColor: "#FEFCE8" }}
-        >
-            <figure className="text-8xl pt-8">
-                😸
-            </figure>
+      {/* Image */}
+      <figure className="relative h-52 w-full">
+        <Image
+          src={image}
+          alt={petName}
+          fill
+          className="object-cover"
+        />
 
-            <div className="card-body text-black">
-                <h2 className="card-title flex justify-between items-center">
-                    {name}
-                    <div
-                        className="badge border-none text-black"
-                        style={{ backgroundColor: "#FEF08A" }}
-                    >
-                        {type}
-                    </div>
-                </h2>
-
-                <p className="font-semibold">Breed: {breed}</p>
-                <p>Age: {age}</p>
-                <p>Gender: {gender}</p>
-                <p>Location: {location}</p>
-
-                <p className="mt-2 ">
-                    {description}
-                </p>
-
-                <div className="card-actions justify-end mt-4">
-                    {pet.tags.map((tag) => (
-                        <div
-                            key={tag}
-                            className="badge badge-outline text-black"
-                            style={{
-                                backgroundColor: "#FEF9C3",
-                                color: "#854D0E",
-                                borderColor: "#FEF9C3",
-                            }}
-                        >
-                            {tag}
-                        </div>
-                    ))}
-                </div>
-                <button className='btn'>View Details</button>
-            </div>
+        {/* Species badge */}
+        <div className="absolute top-3 right-3 badge badge-success text-white">
+          {species}
         </div>
-    )
+      </figure>
+
+      {/* Body */}
+      <div className="card-body">
+
+        <div className="flex justify-between items-start">
+          <div>
+            <h2 className="card-title text-lg">{petName}</h2>
+            <p className="text-sm text-gray-500">{breed}</p>
+          </div>
+
+          <p className="text-xs text-gray-500 text-right">
+            {age} · {gender}
+          </p>
+        </div>
+
+        {/* Status */}
+        <div className="flex gap-2 mt-2">
+          <span className="badge badge-success badge-outline">
+            {healthStatus}
+          </span>
+          <span className="badge badge-info badge-outline">
+            {vaccinationStatus}
+          </span>
+        </div>
+
+        {/* Location */}
+        <p className="text-sm text-gray-500 mt-2">
+          📍 {location}
+        </p>
+
+        {/* Description */}
+        <p className="text-sm text-gray-600 line-clamp-2">
+          {description}
+        </p>
+
+        {/* Button */}
+        <div className="card-actions mt-3">
+          <Link
+            href={`/allpets/${_id}`}
+            className="btn btn-primary btn-sm w-full"
+          >
+            View Details
+          </Link>
+        </div>
+
+      </div>
+    </div>
+  );
 }
