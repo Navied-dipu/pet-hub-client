@@ -1,8 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 
-
-
 export default function AllPetsCard({ pet }) {
   const {
     _id,
@@ -17,9 +15,8 @@ export default function AllPetsCard({ pet }) {
     location,
     description,
   } = pet;
-  // console.log(pet)
-  return (
 
+  return (
     <div className="card w-80 bg-base-100 text-white shadow-xl border">
 
       {/* Image */}
