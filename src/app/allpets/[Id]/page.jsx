@@ -17,6 +17,7 @@ import {
   FiCheckCircle,
   FiSmile,
   FiDollarSign,
+  FiAlertCircle,
 } from "react-icons/fi";
 
 const PetDetailsPage = () => {
@@ -70,6 +71,16 @@ const PetDetailsPage = () => {
   const handleAdoptSubmit = async (e) => {
     e.preventDefault();
     if (!session || !pet) return;
+
+    if (user.email === pet.ownerEmail) {
+      toast.error("Pet owners are not allowed to submit adoption requests.");
+      return;
+    }
+
+    if (pet.status === "Adopted") {
+      toast.error("This pet has already been adopted.");
+      return;
+    }
 
     setSubmitLoading(true);
 
@@ -287,113 +298,139 @@ const PetDetailsPage = () => {
         {/* Right Side: Sticky Adoption Form */}
         <div className="lg:col-span-1 lg:sticky lg:top-24">
           <div className="bg-base-100 rounded-2xl shadow-xl border border-base-200 overflow-hidden">
-            {/* Header decoration */}
-            <div className="bg-gradient-to-r from-primary to-secondary p-5 text-white text-center">
-              <h2 className="text-2xl font-extrabold flex justify-center items-center gap-2">
-                Adopt {pet.petName} <FiHeart className="fill-white animate-pulse" />
-              </h2>
-              <p className="text-xs text-white/95 mt-1">Submit adoption request to start process</p>
-            </div>
-
-            {/* Adoption Form Content */}
-            <form onSubmit={handleAdoptSubmit} className="p-6 space-y-4">
-              {/* Pet Name - Read Only */}
-              <div className="form-control">
-                <label className="label py-1">
-                  <span className="label-text font-bold text-gray-400 flex items-center gap-1.5">
-                    Pet Name
-                  </span>
-                </label>
-                <input
-                  type="text"
-                  value={pet.petName}
-                  disabled
-                  className="input input-bordered input-disabled w-full bg-base-200 border-base-300 cursor-not-allowed font-semibold text-gray-500"
-                />
+            {pet.status === "Adopted" ? (
+              <div className="p-8 text-center space-y-4 bg-success/10 border border-success/20">
+                <FiCheckCircle className="text-6xl text-success mx-auto animate-bounce" />
+                <h2 className="text-2xl font-extrabold text-white">Already Adopted!</h2>
+                <p className="text-gray-400 text-sm">
+                  This pet has found their forever home and is no longer available for adoption requests.
+                </p>
+                <Link href="/allpets" className="btn btn-success btn-sm text-white w-full rounded-xl mt-2">
+                  Find Other Pets
+                </Link>
               </div>
-
-              {/* User Name - Read Only */}
-              <div className="form-control">
-                <label className="label py-1">
-                  <span className="label-text font-bold text-gray-400 flex items-center gap-1.5">
-                    <FiUser /> User Name
-                  </span>
-                </label>
-                <input
-                  type="text"
-                  value={user.name}
-                  disabled
-                  className="input input-bordered input-disabled w-full bg-base-200 border-base-300 cursor-not-allowed font-semibold text-gray-500"
-                />
+            ) : user.email === pet.ownerEmail ? (
+              <div className="p-8 text-center space-y-4 bg-warning/10 border border-warning/20">
+                <FiAlertCircle className="text-6xl text-warning mx-auto" />
+                <h2 className="text-2xl font-extrabold text-white">Owner Control</h2>
+                <p className="text-gray-400 text-sm">
+                  As the owner of this pet listing, you cannot submit adoption requests for your own pet.
+                </p>
+                <Link href="/dashboard/dasboard-Section" className="btn btn-warning btn-sm text-black w-full rounded-xl mt-2">
+                  Manage Listings
+                </Link>
               </div>
+            ) : (
+              <>
+                {/* Header decoration */}
+                <div className="bg-gradient-to-r from-primary to-secondary p-5 text-white text-center">
+                  <h2 className="text-2xl font-extrabold flex justify-center items-center gap-2">
+                    Adopt {pet.petName} <FiHeart className="fill-white animate-pulse" />
+                  </h2>
+                  <p className="text-xs text-white/95 mt-1">Submit adoption request to start process</p>
+                </div>
 
-              {/* User Email - Read Only */}
-              <div className="form-control">
-                <label className="label py-1">
-                  <span className="label-text font-bold text-gray-400 flex items-center gap-1.5">
-                    <FiMail /> User Email
-                  </span>
-                </label>
-                <input
-                  type="email"
-                  value={user.email}
-                  disabled
-                  className="input input-bordered input-disabled w-full bg-base-200 border-base-300 cursor-not-allowed font-semibold text-gray-500"
-                />
-              </div>
+                {/* Adoption Form Content */}
+                <form onSubmit={handleAdoptSubmit} className="p-6 space-y-4">
+                  {/* Pet Name - Read Only */}
+                  <div className="form-control">
+                    <label className="label py-1">
+                      <span className="label-text font-bold text-gray-400 flex items-center gap-1.5">
+                        Pet Name
+                      </span>
+                    </label>
+                    <input
+                      type="text"
+                      value={pet.petName}
+                      disabled
+                      className="input input-bordered input-disabled w-full bg-base-200 border-base-300 cursor-not-allowed font-semibold text-gray-500"
+                    />
+                  </div>
 
-              {/* Pickup Date - Input */}
-              <div className="form-control">
-                <label className="label py-1">
-                  <span className="label-text font-bold text-white flex items-center gap-1.5">
-                    <FiCalendar className="text-primary" /> Pickup Date <span className="text-error">*</span>
-                  </span>
-                </label>
-                <input
-                  type="date"
-                  required
-                  min={new Date().toISOString().split("T")[0]}
-                  value={pickupDate}
-                  onChange={(e) => setPickupDate(e.target.value)}
-                  className="input input-bordered w-full focus:input-primary text-white border-base-300"
-                />
-              </div>
+                  {/* User Name - Read Only */}
+                  <div className="form-control">
+                    <label className="label py-1">
+                      <span className="label-text font-bold text-gray-400 flex items-center gap-1.5">
+                        <FiUser /> User Name
+                      </span>
+                    </label>
+                    <input
+                      type="text"
+                      value={user.name}
+                      disabled
+                      className="input input-bordered input-disabled w-full bg-base-200 border-base-300 cursor-not-allowed font-semibold text-gray-500"
+                    />
+                  </div>
 
-              {/* Message - Textarea */}
-              <div className="form-control">
-                <label className="label py-1">
-                  <span className="label-text font-bold text-white flex items-center gap-1.5">
-                    Message <span className="text-error">*</span>
-                  </span>
-                </label>
-                <textarea
-                  required
-                  placeholder="Share details about your living space, pet experience, or reasons for wanting to adopt..."
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  className="textarea textarea-bordered h-28 focus:textarea-primary text-white border-base-300 text-sm leading-relaxed"
-                ></textarea>
-              </div>
+                  {/* User Email - Read Only */}
+                  <div className="form-control">
+                    <label className="label py-1">
+                      <span className="label-text font-bold text-gray-400 flex items-center gap-1.5">
+                        <FiMail /> User Email
+                      </span>
+                    </label>
+                    <input
+                      type="email"
+                      value={user.email}
+                      disabled
+                      className="input input-bordered input-disabled w-full bg-base-200 border-base-300 cursor-not-allowed font-semibold text-gray-500"
+                    />
+                  </div>
 
-              {/* Submit Button */}
-              <div className="pt-2">
-                <button
-                  type="submit"
-                  disabled={submitLoading}
-                  className="btn btn-primary w-full text-white font-bold rounded-xl transition duration-200 hover:scale-[1.01] active:scale-95 shadow-md flex items-center justify-center gap-2"
-                >
-                  {submitLoading ? (
-                    <>
-                      <span className="loading loading-spinner loading-sm"></span> Submitting...
-                    </>
-                  ) : (
-                    <>
-                      Adopt {pet.petName}
-                    </>
-                  )}
-                </button>
-              </div>
-            </form>
+                  {/* Pickup Date - Input */}
+                  <div className="form-control">
+                    <label className="label py-1">
+                      <span className="label-text font-bold text-white flex items-center gap-1.5">
+                        <FiCalendar className="text-primary" /> Pickup Date <span className="text-error">*</span>
+                      </span>
+                    </label>
+                    <input
+                      type="date"
+                      required
+                      min={new Date().toISOString().split("T")[0]}
+                      value={pickupDate}
+                      onChange={(e) => setPickupDate(e.target.value)}
+                      className="input input-bordered w-full focus:input-primary text-white border-base-300"
+                    />
+                  </div>
+
+                  {/* Message - Textarea */}
+                  <div className="form-control">
+                    <label className="label py-1">
+                      <span className="label-text font-bold text-white flex items-center gap-1.5">
+                        Message <span className="text-error">*</span>
+                      </span>
+                    </label>
+                    <textarea
+                      required
+                      placeholder="Share details about your living space, pet experience, or reasons for wanting to adopt..."
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      className="textarea textarea-bordered h-28 focus:textarea-primary text-white border-base-300 text-sm leading-relaxed"
+                    ></textarea>
+                  </div>
+
+                  {/* Submit Button */}
+                  <div className="pt-2">
+                    <button
+                      type="submit"
+                      disabled={submitLoading}
+                      className="btn btn-primary w-full text-white font-bold rounded-xl transition duration-200 hover:scale-[1.01] active:scale-95 shadow-md flex items-center justify-center gap-2"
+                    >
+                      {submitLoading ? (
+                        <>
+                          <span className="loading loading-spinner loading-sm"></span> Submitting...
+                        </>
+                      ) : (
+                        <>
+                          Adopt {pet.petName}
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </form>
+              </>
+            )}
           </div>
         </div>
       </div>

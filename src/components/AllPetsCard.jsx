@@ -15,7 +15,7 @@ export default function AllPetsCard({ pet }) {
     location,
     description,
   } = pet;
-
+  // console.log(pet)
   return (
     <div className="card w-80 bg-base-100 text-white shadow-xl border">
 

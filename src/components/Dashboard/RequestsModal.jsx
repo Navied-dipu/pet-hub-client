@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
-import { FiX, FiCalendar, FiMail, FiUser, FiCheck, FiSlash, FiAlertCircle } from "react-icons/fi";
+import { FiX, FiCalendar, FiMail, FiUser, FiCheck, FiSlash, FiAlertCircle, FiCheckCircle } from "react-icons/fi";
 
 export default function RequestsModal({ pet, isOpen, onClose, onRequestProcessed }) {
   const [requests, setRequests] = useState([]);
@@ -24,6 +24,8 @@ export default function RequestsModal({ pet, isOpen, onClose, onRequestProcessed
       setLoading(false);
     }
   };
+
+  const isAnyRequestApproved = requests.some((r) => r.status === "approved") || pet.status === "Adopted";
 
   useEffect(() => {
     if (isOpen && pet) {
@@ -83,6 +85,12 @@ export default function RequestsModal({ pet, isOpen, onClose, onRequestProcessed
           <p className="text-sm text-gray-400 mt-1">
             Review requests to adopt <span className="text-primary font-semibold">{pet.petName}</span>
           </p>
+          {isAnyRequestApproved && (
+            <div className="mt-4 p-3 bg-success/10 border border-success/20 rounded-xl flex items-center gap-2 text-success text-xs font-semibold">
+              <FiCheckCircle className="text-sm shrink-0" />
+              <span>An adoption request has already been approved. Further approvals are locked.</span>
+            </div>
+          )}
         </div>
 
         {loading ? (
@@ -123,7 +131,7 @@ export default function RequestsModal({ pet, isOpen, onClose, onRequestProcessed
                   {request.message && (
                     <div className="mt-2 text-xs text-gray-300 bg-base-300/40 p-3 rounded-lg border border-base-300">
                       <strong className="block mb-1 text-gray-400">Applicant Message:</strong>
-                      <p className="italic">"{request.message}"</p>
+                      <p className="italic">&quot;{request.message}&quot;</p>
                     </div>
                   )}
                 </div>
@@ -155,8 +163,9 @@ export default function RequestsModal({ pet, isOpen, onClose, onRequestProcessed
                       </button>
                       <button
                         onClick={() => handleAction(request._id, "approved")}
-                        disabled={actionLoading !== null}
+                        disabled={actionLoading !== null || isAnyRequestApproved}
                         className="btn btn-success btn-xs text-white flex items-center gap-1"
+                        title={isAnyRequestApproved ? "Another request is already approved" : ""}
                       >
                         <FiCheck /> Approve
                       </button>
