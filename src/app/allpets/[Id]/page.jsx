@@ -23,7 +23,7 @@ import {
 
 const PetDetailsPage = ({ params }) => {
   const router = useRouter();
-  const { id } = params;
+  const { id } = React.use (params);
 
   const { data: session, isPending } = authClient.useSession();
   const user = session?.user;
