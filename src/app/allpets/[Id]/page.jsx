@@ -20,72 +20,72 @@ import {
   FiAlertCircle,
 } from "react-icons/fi";
 
-
 const PetDetailsPage = () => {
   const router = useRouter();
   const params = useParams();
-  const id = params?.id;
+  
+  // ফোল্ডারের নাম [id] বা [petId] যাই হোক, এটি কাজ করবে
+  const petId = params?.id || params?.petId;
 
-  const { data: session, isPending } = authClient.useSession();
+  // সেশন স্টেট
+  const { data: session, isPending: sessionLoading } = authClient.useSession();
   const user = session?.user;
 
+  // ডেটা স্টেট
   const [pet, setPet] = useState(null);
   const [petLoading, setPetLoading] = useState(true);
   const [submitLoading, setSubmitLoading] = useState(false);
 
-  // Form states
+  // ফর্ম স্টেট
   const [pickupDate, setPickupDate] = useState("");
   const [message, setMessage] = useState("");
 
-
+  // ১. ইউজার লগড-ইন না থাকলে রিডাইরেক্ট
   useEffect(() => {
-    if (!isPending && !session) {
+    if (!sessionLoading && !session) {
       toast.error("Please log in to view pet details and adopt.");
-      router.push(`/login`);
+      router.push("/login");
     }
-  }, [session, isPending, router]);
+  }, [session, sessionLoading, router]);
 
+  // ২. Pet Details Fetch করা
   useEffect(() => {
-    // if (!id || isPending || !session) return;
+    // petId বা session না থাকলে অযথাই কল করবে না
+    // if (!petId || sessionLoading || !session) return;
 
     const fetchPetDetails = async () => {
       try {
         setPetLoading(true);
-
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pets/${id}`);
-        if (!res.ok) {
-          throw new Error("Failed to load pet details");
-        }
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pets/${petId}`);
+        
+        if (!res.ok) throw new Error("Failed to load pet details");
+        
         const data = await res.json();
-        console.log(data)
         setPet(data);
       } catch (err) {
-        console.error(err);
-        toast.error("Failed to load pet details. Please try again.");
+        console.error("Fetch Error:", err);
+        toast.error("Failed to load pet details.");
       } finally {
         setPetLoading(false);
       }
     };
 
     fetchPetDetails();
-  }, [id, isPending, session]);
+  }, [petId, sessionLoading, session]);
 
+  // ৩. ফর্ম সাবমিট হ্যান্ডলার
   const handleAdoptSubmit = async (e) => {
     e.preventDefault();
     if (!session || !pet) return;
 
     if (user.email === pet.ownerEmail) {
-      toast.error("Pet owners are not allowed to submit adoption requests.");
-      return;
+      return toast.error("Pet owners cannot adopt their own pet.");
     }
-
     if (pet.status === "Adopted") {
-      toast.error("This pet has already been adopted.");
-      return;
+      return toast.error("This pet has already been adopted.");
     }
 
     setSubmitLoading(true);
-
     const adoptionRequest = {
       petId: pet._id,
       petName: pet.petName,
@@ -102,8 +102,8 @@ const PetDetailsPage = () => {
       submittedAt: new Date(),
     };
 
-    const { data: tokenData } = await authClient.token()
     try {
+      const { data: tokenData } = await authClient.token();
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/adopt`, {
         method: "POST",
         headers: {
@@ -113,29 +113,25 @@ const PetDetailsPage = () => {
         body: JSON.stringify(adoptionRequest),
       });
 
-      if (!res.ok) {
-        throw new Error("Failed to submit adoption request");
-      }
+      if (!res.ok) throw new Error("Failed to submit request");
 
       const data = await res.json();
-
       if (data.insertedId) {
         toast.success(`Adoption request for ${pet.petName} submitted successfully!`);
-
         router.push("/allpets");
-      } else {
-        toast.error("Failed to submit adoption request.");
       }
     } catch (err) {
-      console.error(err);
-      toast.error("An error occurred during submission. Please try again.");
+      console.error("Submit Error:", err);
+      toast.error("An error occurred during submission.");
     } finally {
       setSubmitLoading(false);
     }
   };
 
-  // If session is loading or user is not logged in, show full screen loader
-  if (isPending || !session) {
+  // ---------------- UI RENDERING ----------------
+
+  // সেশন চেক হচ্ছে
+  if (sessionLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[70vh] space-y-4">
         <span className="loading loading-ring loading-lg text-primary"></span>
@@ -144,7 +140,10 @@ const PetDetailsPage = () => {
     );
   }
 
-  // If pet loading is in progress
+  // সেশন না থাকলে কিছুই দেখাবে না (রিডাইরেক্ট হবে)
+  if (!session) return null;
+
+  // Pet ডেটা ফেচ হচ্ছে
   if (petLoading) {
     return (
       <div className="max-w-7xl mx-auto px-4 py-8 w-full">
@@ -163,14 +162,14 @@ const PetDetailsPage = () => {
     );
   }
 
-  // If pet details not found
+  // Pet পাওয়া যায়নি
   if (!pet) {
     return (
       <div className="max-w-7xl mx-auto px-4 py-16 text-center">
         <div className="max-w-md mx-auto space-y-4">
           <h2 className="text-3xl font-extrabold text-gray-800">Pet Details Not Found</h2>
           <p className="text-gray-500">
-            We couldnt retrieve information for this pet. It may have been adopted or the page link might be outdated.
+            We couldn't retrieve information for this pet.
           </p>
           <Link href="/allpets" className="btn btn-primary btn-md rounded-xl">
             <FiArrowLeft /> Back to All Pets
@@ -180,9 +179,9 @@ const PetDetailsPage = () => {
     );
   }
 
+  // মেইন পেইজ রেন্ডার
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-grow">
-      {/* Navigation & Header */}
       <div className="mb-6">
         <Link
           href="/allpets"
@@ -192,13 +191,10 @@ const PetDetailsPage = () => {
         </Link>
       </div>
 
-      {/* Main Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-        {/* Left Side: Pet Info & Details */}
+        {/* Left Side */}
         <div className="lg:col-span-2 space-y-6">
-          {/* Main Pet Details Card */}
           <div className="bg-base-100 rounded-2xl shadow-xl overflow-hidden border border-base-200">
-            {/* Image Banner */}
             <div className="relative h-[450px] w-full bg-neutral">
               <Image
                 src={pet.image || "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"}
@@ -213,9 +209,7 @@ const PetDetailsPage = () => {
               </div>
             </div>
 
-            {/* Content Details */}
             <div className="p-6 sm:p-8 space-y-6">
-              {/* Pet Title */}
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
                 <div>
                   <h1 className="text-4xl font-extrabold text-white flex items-center gap-2">
@@ -225,10 +219,10 @@ const PetDetailsPage = () => {
                   <p className="text-gray-400 text-lg mt-1 font-medium">{pet.breed}</p>
                 </div>
                 {pet.adoptionFee && (
-                  <div className="bg-success/20 text-success border border-success/30 px-5 py-3 rounded-2xl flex items-center gap-2 self-start sm:self-center">
+                  <div className="bg-success/20 text-success border border-success/30 px-5 py-3 rounded-2xl flex items-center gap-2">
                     <FiDollarSign className="text-xl font-bold" />
                     <div>
-                      <span className="text-xs uppercase block font-semibold text-success/70">Adoption Fee</span>
+                      <span className="text-xs uppercase block font-semibold text-success/70">Fee</span>
                       <span className="text-xl font-bold">${pet.adoptionFee}</span>
                     </div>
                   </div>
@@ -237,199 +231,108 @@ const PetDetailsPage = () => {
 
               <div className="divider my-2"></div>
 
-              {/* Grid of Key Info Badge Blocks */}
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 <div className="bg-base-200 p-4 rounded-xl flex items-center gap-3 border border-base-300">
                   <FiSmile className="text-2xl text-warning" />
                   <div>
                     <span className="text-xs text-gray-500 uppercase block">Age</span>
-                    <span className="font-bold text-sm sm:text-base text-white">{pet.age} Years</span>
+                    <span className="font-bold text-white">{pet.age} Years</span>
                   </div>
                 </div>
-
                 <div className="bg-base-200 p-4 rounded-xl flex items-center gap-3 border border-base-300">
                   <FiInfo className="text-2xl text-accent" />
                   <div>
                     <span className="text-xs text-gray-500 uppercase block">Gender</span>
-                    <span className="font-bold text-sm sm:text-base text-white">{pet.gender}</span>
+                    <span className="font-bold text-white">{pet.gender}</span>
                   </div>
                 </div>
-
                 <div className="bg-base-200 p-4 rounded-xl flex items-center gap-3 border border-base-300">
                   <FiCheckCircle className="text-2xl text-success" />
                   <div>
                     <span className="text-xs text-gray-500 uppercase block">Health</span>
-                    <span className="font-bold text-sm sm:text-base text-white">{pet.healthStatus}</span>
+                    <span className="font-bold text-white">{pet.healthStatus}</span>
                   </div>
                 </div>
-
                 <div className="bg-base-200 p-4 rounded-xl flex items-center gap-3 border border-base-300">
                   <FiCheckCircle className="text-2xl text-info" />
                   <div>
                     <span className="text-xs text-gray-500 uppercase block">Vaccination</span>
-                    <span className="font-bold text-sm sm:text-base text-white">{pet.vaccinationStatus}</span>
+                    <span className="font-bold text-white">{pet.vaccinationStatus}</span>
                   </div>
                 </div>
-
                 <div className="bg-base-200 p-4 rounded-xl flex items-center gap-3 border border-base-300 col-span-2 sm:col-span-2">
                   <FiMapPin className="text-2xl text-error" />
                   <div>
                     <span className="text-xs text-gray-500 uppercase block">Location</span>
-                    <span className="font-bold text-sm sm:text-base text-white">{pet.location}</span>
+                    <span className="font-bold text-white">{pet.location}</span>
                   </div>
                 </div>
               </div>
 
-              {/* Description */}
               <div className="space-y-3">
                 <h3 className="text-2xl font-bold text-white">About {pet.petName}</h3>
-                <p className="text-gray-300 leading-relaxed whitespace-pre-line text-base">
-                  {pet.description || "No additional description was provided for this pet. Please inquire for details."}
+                <p className="text-gray-300 leading-relaxed whitespace-pre-line">
+                  {pet.description || "No description provided."}
                 </p>
-              </div>
-
-              {/* Listing Details */}
-              <div className="pt-4 border-t border-base-300 text-xs text-gray-500 flex flex-wrap gap-x-6 gap-y-2">
-                <span>Listed by: {pet.ownerEmail || "N/A"}</span>
-                {pet.createdAt && (
-                  <span>Posted: {new Date(pet.createdAt).toLocaleDateString()}</span>
-                )}
               </div>
             </div>
           </div>
         </div>
 
-        {/* Right Side: Sticky Adoption Form */}
+        {/* Right Side */}
         <div className="lg:col-span-1 lg:sticky lg:top-24">
           <div className="bg-base-100 rounded-2xl shadow-xl border border-base-200 overflow-hidden">
             {pet.status === "Adopted" ? (
-              <div className="p-8 text-center space-y-4 bg-success/10 border border-success/20">
+              <div className="p-8 text-center space-y-4 bg-success/10">
                 <FiCheckCircle className="text-6xl text-success mx-auto animate-bounce" />
                 <h2 className="text-2xl font-extrabold text-white">Already Adopted!</h2>
-                <p className="text-gray-400 text-sm">
-                  This pet has found their forever home and is no longer available for adoption requests.
-                </p>
-                <Link href="/allpets" className="btn btn-success btn-sm text-white w-full rounded-xl mt-2">
+                <Link href="/allpets" className="btn btn-success btn-sm w-full rounded-xl mt-2">
                   Find Other Pets
                 </Link>
               </div>
             ) : user.email === pet.ownerEmail ? (
-              <div className="p-8 text-center space-y-4 bg-warning/10 border border-warning/20">
+              <div className="p-8 text-center space-y-4 bg-warning/10">
                 <FiAlertCircle className="text-6xl text-warning mx-auto" />
                 <h2 className="text-2xl font-extrabold text-white">Owner Control</h2>
-                <p className="text-gray-400 text-sm">
-                  As the owner of this pet listing, you cannot submit adoption requests for your own pet.
-                </p>
-                <Link href="/dashboard/dasboard-Section" className="btn btn-warning btn-sm text-black w-full rounded-xl mt-2">
-                  Manage Listings
-                </Link>
+                <p className="text-gray-400 text-sm">You cannot adopt your own pet.</p>
               </div>
             ) : (
               <>
-                {/* Header decoration */}
                 <div className="bg-gradient-to-r from-primary to-secondary p-5 text-white text-center">
                   <h2 className="text-2xl font-extrabold flex justify-center items-center gap-2">
                     Adopt {pet.petName} <FiHeart className="fill-white animate-pulse" />
                   </h2>
-                  <p className="text-xs text-white/95 mt-1">Submit adoption request to start process</p>
                 </div>
 
-                {/* Adoption Form Content */}
                 <form onSubmit={handleAdoptSubmit} className="p-6 space-y-4">
-                  {/* Pet Name - Read Only */}
                   <div className="form-control">
-                    <label className="label py-1">
-                      <span className="label-text font-bold text-gray-400 flex items-center gap-1.5">
-                        Pet Name
-                      </span>
-                    </label>
-                    <input
-                      type="text"
-                      value={pet.petName}
-                      disabled
-                      className="input input-bordered input-disabled w-full bg-base-200 border-base-300 cursor-not-allowed font-semibold text-gray-500"
-                    />
+                    <label className="label py-1"><span className="label-text font-bold text-gray-400">Pet Name</span></label>
+                    <input type="text" value={pet.petName} disabled className="input input-bordered w-full bg-base-200 font-semibold text-gray-500" />
+                  </div>
+                  
+                  <div className="form-control">
+                    <label className="label py-1"><span className="label-text font-bold text-gray-400 flex items-center gap-1.5"><FiUser /> Name</span></label>
+                    <input type="text" value={user.name} disabled className="input input-bordered w-full bg-base-200 font-semibold text-gray-500" />
                   </div>
 
-                  {/* User Name - Read Only */}
                   <div className="form-control">
-                    <label className="label py-1">
-                      <span className="label-text font-bold text-gray-400 flex items-center gap-1.5">
-                        <FiUser /> User Name
-                      </span>
-                    </label>
-                    <input
-                      type="text"
-                      value={user.name}
-                      disabled
-                      className="input input-bordered input-disabled w-full bg-base-200 border-base-300 cursor-not-allowed font-semibold text-gray-500"
-                    />
+                    <label className="label py-1"><span className="label-text font-bold text-gray-400 flex items-center gap-1.5"><FiMail /> Email</span></label>
+                    <input type="email" value={user.email} disabled className="input input-bordered w-full bg-base-200 font-semibold text-gray-500" />
                   </div>
 
-                  {/* User Email - Read Only */}
                   <div className="form-control">
-                    <label className="label py-1">
-                      <span className="label-text font-bold text-gray-400 flex items-center gap-1.5">
-                        <FiMail /> User Email
-                      </span>
-                    </label>
-                    <input
-                      type="email"
-                      value={user.email}
-                      disabled
-                      className="input input-bordered input-disabled w-full bg-base-200 border-base-300 cursor-not-allowed font-semibold text-gray-500"
-                    />
+                    <label className="label py-1"><span className="label-text font-bold text-white flex items-center gap-1.5"><FiCalendar className="text-primary" /> Pickup Date *</span></label>
+                    <input type="date" required min={new Date().toISOString().split("T")[0]} value={pickupDate} onChange={(e) => setPickupDate(e.target.value)} className="input input-bordered w-full focus:input-primary text-white" />
                   </div>
 
-                  {/* Pickup Date - Input */}
                   <div className="form-control">
-                    <label className="label py-1">
-                      <span className="label-text font-bold text-white flex items-center gap-1.5">
-                        <FiCalendar className="text-primary" /> Pickup Date <span className="text-error">*</span>
-                      </span>
-                    </label>
-                    <input
-                      type="date"
-                      required
-                      min={new Date().toISOString().split("T")[0]}
-                      value={pickupDate}
-                      onChange={(e) => setPickupDate(e.target.value)}
-                      className="input input-bordered w-full focus:input-primary text-white border-base-300"
-                    />
+                    <label className="label py-1"><span className="label-text font-bold text-white">Message *</span></label>
+                    <textarea required placeholder="Share details..." value={message} onChange={(e) => setMessage(e.target.value)} className="textarea textarea-bordered h-28 focus:textarea-primary text-white"></textarea>
                   </div>
 
-                  {/* Message - Textarea */}
-                  <div className="form-control">
-                    <label className="label py-1">
-                      <span className="label-text font-bold text-white flex items-center gap-1.5">
-                        Message <span className="text-error">*</span>
-                      </span>
-                    </label>
-                    <textarea
-                      required
-                      placeholder="Share details about your living space, pet experience, or reasons for wanting to adopt..."
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
-                      className="textarea textarea-bordered h-28 focus:textarea-primary text-white border-base-300 text-sm leading-relaxed"
-                    ></textarea>
-                  </div>
-
-                  {/* Submit Button */}
                   <div className="pt-2">
-                    <button
-                      type="submit"
-                      disabled={submitLoading}
-                      className="btn btn-primary w-full text-white font-bold rounded-xl transition duration-200 hover:scale-[1.01] active:scale-95 shadow-md flex items-center justify-center gap-2"
-                    >
-                      {submitLoading ? (
-                        <>
-                          <span className="loading loading-spinner loading-sm"></span> Submitting...
-                        </>
-                      ) : (
-                        <>
-                          Adopt {pet.petName}
-                        </>
-                      )}
+                    <button type="submit" disabled={submitLoading} className="btn btn-primary w-full text-white font-bold rounded-xl shadow-md flex items-center justify-center gap-2">
+                      {submitLoading ? <><span className="loading loading-spinner loading-sm"></span> Submitting...</> : `Adopt ${pet.petName}`}
                     </button>
                   </div>
                 </form>
