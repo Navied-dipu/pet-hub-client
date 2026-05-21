@@ -26,7 +26,7 @@ const PetDetailsPage = () => {
 
   // ফোল্ডারের নাম [id] বা [petId] যাই হোক, এটি কাজ করবে
   const petId = params.split("/").pop();
-  console.log(petId)
+  // console.log(petId)
   // সেশন স্টেট
   const { data: session, isPending: sessionLoading } = authClient.useSession();
   const user = session?.user;
