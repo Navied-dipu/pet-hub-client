@@ -17,6 +17,7 @@ import {
 } from "react-icons/fi";
 import UpdatePetModal from "./UpdatePetModal";
 import RequestsModal from "./RequestsModal";
+import { authClient } from "@/lib/auth-client";
 
 export default function MyListings({ user }) {
   const [pets, setPets] = useState([]);

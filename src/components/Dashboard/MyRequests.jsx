@@ -13,6 +13,7 @@ import {
   FiClock,
   FiAlertTriangle,
 } from "react-icons/fi";
+import { authClient } from "@/lib/auth-client";
 
 export default function MyRequests({ user }) {
   const [requests, setRequests] = useState([]);

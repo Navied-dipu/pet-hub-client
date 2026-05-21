@@ -1,5 +1,6 @@
 "use client";
 
+import { authClient } from "@/lib/auth-client";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { FiX, FiCalendar, FiMail, FiUser, FiCheck, FiSlash, FiAlertCircle, FiCheckCircle } from "react-icons/fi";
@@ -13,7 +14,13 @@ export default function RequestsModal({ pet, isOpen, onClose, onRequestProcessed
     if (!pet) return;
     try {
       setLoading(true);
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/adoption-requests/pet/${pet._id}`);
+      
+      const { data: tokenData } = await authClient.token()
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/adoption-requests/pet/${pet._id}`,{
+        headers: {
+          authorization: `Bearer ${tokenData?.token}`,
+        },
+      });
       if (!res.ok) throw new Error("Failed to load requests");
       const data = await res.json();
       setRequests(data);

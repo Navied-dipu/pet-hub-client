@@ -1,5 +1,6 @@
 "use client";
 
+import { authClient } from "@/lib/auth-client";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { FiX } from "react-icons/fi";
