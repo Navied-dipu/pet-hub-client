@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import Image from "next/image";
 import Link from "next/link";
@@ -21,10 +21,9 @@ import {
 } from "react-icons/fi";
 
 
-const PetDetailsPage = () => {
+const PetDetailsPage = ({ params }) => {
   const router = useRouter();
-  const params = useParams();
-  const id = params?.id;
+  const { id } = React.use(params);
 
   const { data: session, isPending } = authClient.useSession();
   const user = session?.user;
@@ -51,7 +50,7 @@ const PetDetailsPage = () => {
     const fetchPetDetails = async () => {
       try {
         setPetLoading(true);
-     
+
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pets/${id}`);
         if (!res.ok) {
           throw new Error("Failed to load pet details");
