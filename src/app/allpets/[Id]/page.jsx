@@ -50,13 +50,14 @@ const PetDetailsPage = () => {
     if (!id) return;
 
     const fetchPetDetails = async () => {
-      
-      const token = await authClient.getToken()
+
+      const { data: tokenData } = await authClient.token()
+      // console.log(tokenData)
       try {
         setPetLoading(true);
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pets/${id}`, {
           headers: {
-            Authorization: `Bearer ${token}`,
+            authorization: `Bearer ${tokenData?.token}`,
           },
         });
         if (!res.ok) {
@@ -107,11 +108,13 @@ const PetDetailsPage = () => {
       submittedAt: new Date(),
     };
 
+    const { data: tokenData } = await authClient.token()
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/adopt`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          authorization: `Bearer ${tokenData?.token}`,
         },
         body: JSON.stringify(adoptionRequest),
       });

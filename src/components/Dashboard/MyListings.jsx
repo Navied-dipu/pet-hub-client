@@ -53,9 +53,14 @@ export default function MyListings({ user }) {
   }, [user]);
 
   const handleDelete = async (id) => {
+    
+      const { data: tokenData } = await authClient.token()
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pets/${id}`, {
         method: "DELETE",
+        headers: {
+          authorization: `Bearer ${tokenData?.token}`,
+        },
       });
 
       if (!res.ok) throw new Error("Failed to delete pet");

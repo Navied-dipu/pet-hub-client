@@ -37,11 +37,13 @@ export default function RequestsModal({ pet, isOpen, onClose, onRequestProcessed
     if (!pet) return;
     setActionLoading(requestId);
 
+    const { data: tokenData } = await authClient.token()
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/adopt/${requestId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          authorization: `Bearer ${tokenData?.token}`,
         },
         body: JSON.stringify({
           status,
@@ -50,7 +52,7 @@ export default function RequestsModal({ pet, isOpen, onClose, onRequestProcessed
       });
 
       if (!res.ok) throw new Error("Failed to update status");
-      
+
       toast.success(`Request ${status} successfully!`);
       fetchRequests();
       if (onRequestProcessed) {
@@ -69,7 +71,7 @@ export default function RequestsModal({ pet, isOpen, onClose, onRequestProcessed
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
       <div className="relative w-full max-w-3xl max-h-[85vh] overflow-y-auto bg-base-100 border border-base-300 rounded-2xl shadow-2xl p-6 sm:p-8">
-        
+
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -140,13 +142,12 @@ export default function RequestsModal({ pet, isOpen, onClose, onRequestProcessed
                 <div className="flex sm:flex-col items-end justify-between sm:justify-center gap-3 border-t sm:border-t-0 pt-3 sm:pt-0 border-base-300">
                   {/* Status Badge */}
                   <span
-                    className={`badge px-3 py-2 text-xs font-bold ${
-                      request.status === "approved"
+                    className={`badge px-3 py-2 text-xs font-bold ${request.status === "approved"
                         ? "badge-success text-white"
                         : request.status === "rejected"
-                        ? "badge-error text-white"
-                        : "badge-warning text-white"
-                    }`}
+                          ? "badge-error text-white"
+                          : "badge-warning text-white"
+                      }`}
                   >
                     {request.status.toUpperCase()}
                   </span>

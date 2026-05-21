@@ -36,7 +36,9 @@ export default function AddPetPage() {
       ownerEmail: user?.email,
       createdAt: new Date(),
     };
-console.log(petData)
+
+
+      const { data: tokenData } = await authClient.token()
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/add-pet`,
@@ -44,6 +46,7 @@ console.log(petData)
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            authorization: `Bearer ${tokenData?.token}`,
           },
           body: JSON.stringify(petData),
         }

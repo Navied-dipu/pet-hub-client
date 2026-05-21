@@ -21,9 +21,15 @@ export default function MyRequests({ user }) {
 
   const fetchMyRequests = async () => {
     if (!user?.email) return;
+    
+      const { data: tokenData } = await authClient.token()
     try {
       setLoading(true);
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/my-adoptions/${user.email}`);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/my-adoptions/${user.email}`, {
+        headers: {
+          authorization: `Bearer ${tokenData?.token}`,
+        },
+      });
       if (!res.ok) throw new Error("Failed to load requests");
       const data = await res.json();
       setRequests(data);
@@ -40,9 +46,14 @@ export default function MyRequests({ user }) {
   }, [user]);
 
   const handleCancelRequest = async (id) => {
+    
+      const { data: tokenData } = await authClient.token()
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/adopt/${id}`, {
         method: "DELETE",
+        headers: {
+          authorization: `Bearer ${tokenData?.token}`,
+        },
       });
 
       if (!res.ok) throw new Error("Failed to cancel request");
