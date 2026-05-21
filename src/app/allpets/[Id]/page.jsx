@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import Image from "next/image";
 import Link from "next/link";
@@ -21,9 +21,10 @@ import {
 } from "react-icons/fi";
 
 
-const PetDetailsPage = ({ params }) => {
+const PetDetailsPage = () => {
   const router = useRouter();
-  const { id } = React.use (params);
+  const params = useParams();
+  const id = params?.id;
 
   const { data: session, isPending } = authClient.useSession();
   const user = session?.user;
@@ -45,7 +46,7 @@ const PetDetailsPage = ({ params }) => {
   }, [session, isPending, router]);
 
   useEffect(() => {
-    if (!id || isPending || !session) return;
+    // if (!id || isPending || !session) return;
 
     const fetchPetDetails = async () => {
       try {
