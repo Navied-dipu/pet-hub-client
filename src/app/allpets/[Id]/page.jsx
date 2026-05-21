@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter, useParams, usePathname } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import Image from "next/image";
 import Link from "next/link";
@@ -22,10 +22,10 @@ import {
 
 const PetDetailsPage = () => {
   const router = useRouter();
-  const params = useParams();
+  const params = usePathname();
 
   // ফোল্ডারের নাম [id] বা [petId] যাই হোক, এটি কাজ করবে
-  const petId = params?.id || params?.petId;
+  const petId = params.split("/").pop();
   console.log(petId)
   // সেশন স্টেট
   const { data: session, isPending: sessionLoading } = authClient.useSession();
