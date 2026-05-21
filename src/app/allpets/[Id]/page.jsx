@@ -23,10 +23,10 @@ import {
 const PetDetailsPage = () => {
   const router = useRouter();
   const params = useParams();
-  
+
   // ফোল্ডারের নাম [id] বা [petId] যাই হোক, এটি কাজ করবে
   const petId = params?.id || params?.petId;
-
+  console.log(petId)
   // সেশন স্টেট
   const { data: session, isPending: sessionLoading } = authClient.useSession();
   const user = session?.user;
@@ -57,9 +57,9 @@ const PetDetailsPage = () => {
       try {
         setPetLoading(true);
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pets/${petId}`);
-        
+
         if (!res.ok) throw new Error("Failed to load pet details");
-        
+
         const data = await res.json();
         setPet(data);
       } catch (err) {
@@ -309,7 +309,7 @@ const PetDetailsPage = () => {
                     <label className="label py-1"><span className="label-text font-bold text-gray-400">Pet Name</span></label>
                     <input type="text" value={pet.petName} disabled className="input input-bordered w-full bg-base-200 font-semibold text-gray-500" />
                   </div>
-                  
+
                   <div className="form-control">
                     <label className="label py-1"><span className="label-text font-bold text-gray-400 flex items-center gap-1.5"><FiUser /> Name</span></label>
                     <input type="text" value={user.name} disabled className="input input-bordered w-full bg-base-200 font-semibold text-gray-500" />
