@@ -72,12 +72,7 @@ export default   function   Navbar() {
                                 {user.email}
                             </li>
                             <div className="divider my-0" />
-                            <li>
-                                <Link href="/profile" className="justify-between">
-                                    Profile
-                                    <span className="badge badge-sm badge-ghost">New</span>
-                                </Link>
-                            </li>
+                          
                             <li>
                                 <Link href="/dashboard/dasboard-Section">
                                     Dashboard

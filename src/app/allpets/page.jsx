@@ -23,11 +23,12 @@ export default function AllPetsPage() {
         if (sort) params.set("sort", sort);
 
         const url = `${process.env.NEXT_PUBLIC_API_URL}/pets${params.toString() ? `?${params}` : ""}`;
-        // console.log("Fetching pets from:", url);
+        console.log("Fetching pets from:", url);
 
         const res = await fetch(url);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
+        console.log(data)
         setPets(data);
       } catch (err) {
         console.error("Failed to fetch pets:", err);
@@ -37,7 +38,7 @@ export default function AllPetsPage() {
       }
     };
 
-   
+
     const timer = setTimeout(fetchPets, 300);
     return () => clearTimeout(timer);
   }, [search, selectedSpecies, sort]);

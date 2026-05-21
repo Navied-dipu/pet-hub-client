@@ -9,9 +9,9 @@ export default function AddPetPage() {
   const router = useRouter();
 
   // Replace with your auth user
-    const { data: session, isPending } = authClient.useSession();
-     console.log(session)
-     const user = session?.user;
+  const { data: session, isPending } = authClient.useSession();
+  // console.log(session)
+  const user = session?.user;
 
   const [loading, setLoading] = useState(false);
 
@@ -38,7 +38,7 @@ export default function AddPetPage() {
     };
 
 
-      const { data: tokenData } = await authClient.token()
+    const { data: tokenData } = await authClient.token()
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/add-pet`,
@@ -147,7 +147,7 @@ export default function AddPetPage() {
             <select
               name="gender"
               required
-              className="w-full border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-orange-400"
+              className="w-full border rounded-xl px-4 py-3  outline-none focus:ring-2 focus:ring-orange-400"
             >
               <option value="">Select Gender</option>
               <option value="Male">Male</option>

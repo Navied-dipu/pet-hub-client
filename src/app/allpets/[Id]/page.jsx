@@ -46,23 +46,18 @@ const PetDetailsPage = () => {
   }, [session, isPending, router]);
 
   useEffect(() => {
-    if (!id) return;
+    if (!id || isPending || !session) return;
 
     const fetchPetDetails = async () => {
-
-      const { data: tokenData } = await authClient.token()
-      // console.log(tokenData)
       try {
         setPetLoading(true);
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pets/${id}`, {
-          headers: {
-            authorization: `Bearer ${tokenData?.token}`,
-          },
-        });
+     
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pets/${id}`);
         if (!res.ok) {
           throw new Error("Failed to load pet details");
         }
         const data = await res.json();
+        console.log(data)
         setPet(data);
       } catch (err) {
         console.error(err);
@@ -73,7 +68,7 @@ const PetDetailsPage = () => {
     };
 
     fetchPetDetails();
-  }, [id]);
+  }, [id, isPending, session]);
 
   const handleAdoptSubmit = async (e) => {
     e.preventDefault();
@@ -126,7 +121,7 @@ const PetDetailsPage = () => {
 
       if (data.insertedId) {
         toast.success(`Adoption request for ${pet.petName} submitted successfully!`);
-      
+
         router.push("/allpets");
       } else {
         toast.error("Failed to submit adoption request.");
