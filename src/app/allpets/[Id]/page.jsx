@@ -37,7 +37,7 @@ const PetDetailsPage = () => {
   const [pickupDate, setPickupDate] = useState("");
   const [message, setMessage] = useState("");
 
-  // Redirect to login if user is not authenticated
+
   useEffect(() => {
     if (!isPending && !session) {
       toast.error("Please log in to view pet details and adopt.");
@@ -45,7 +45,6 @@ const PetDetailsPage = () => {
     }
   }, [session, isPending, router]);
 
-  // Fetch pet details
   useEffect(() => {
     if (!id) return;
 
@@ -104,7 +103,7 @@ const PetDetailsPage = () => {
       userEmail: user.email,
       pickupDate,
       message,
-      status: "pending", // default status
+      status: "pending",
       submittedAt: new Date(),
     };
 
@@ -127,7 +126,7 @@ const PetDetailsPage = () => {
 
       if (data.insertedId) {
         toast.success(`Adoption request for ${pet.petName} submitted successfully!`);
-        // Redirect to allpets page or list of listings
+      
         router.push("/allpets");
       } else {
         toast.error("Failed to submit adoption request.");
