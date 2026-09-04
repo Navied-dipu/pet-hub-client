@@ -1,3 +1,6 @@
+"use client";
+import { motion } from "framer-motion";
+
 const reasons = [
     { emoji: "❤️", title: "Save a Life", desc: "Every adoption gives a shelter animal a second chance at happiness." },
     { emoji: "🏡", title: "Gain a Best Friend", desc: "Adopted pets form an incredibly deep bond with their new family." },
@@ -8,33 +11,59 @@ const reasons = [
 ];
 
 export default function WhyAdopt() {
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        show: {
+            opacity: 1,
+            transition: { staggerChildren: 0.1 }
+        }
+    };
+
+    const cardVariants = {
+        hidden: { opacity: 0, scale: 0.95 },
+        show: { opacity: 1, scale: 1, transition: { type: "spring", stiffness: 100 } }
+    };
+
     return (
-        <section className="bg-orange-50 py-20 px-4">
-            <div className="max-w-6xl mx-auto">
-                <div className="text-center mb-12">
-                    <span className="bg-orange-100 text-orange-700 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full">
+        <section className="bg-base-200/30 py-24 px-6 lg:px-8 relative overflow-hidden">
+            {/* Background elements */}
+            <div className="absolute bottom-0 right-0 -z-10 w-96 h-96 bg-secondary/5 rounded-full blur-3xl translate-y-1/2 translate-x-1/2"></div>
+            
+            <div className="max-w-7xl mx-auto">
+                <div className="text-center mb-16 max-w-3xl mx-auto">
+                    <span className="inline-block bg-secondary/10 text-secondary text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
                         Why Adopt
                     </span>
-                    <h2 className="mt-4 text-4xl font-black text-gray-900">
+                    <h2 className="text-4xl md:text-5xl font-black text-base-content mb-4">
                         Adopt Instead of Buy
                     </h2>
-                    <p className="mt-3 text-gray-600 max-w-md mx-auto">
+                    <p className="text-lg text-base-content/70">
                         The rewards go far beyond giving a pet a home — it transforms your life too.
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <motion.div 
+                    variants={containerVariants}
+                    initial="hidden"
+                    whileInView="show"
+                    viewport={{ once: true, margin: "-50px" }}
+                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+                >
                     {reasons.map((r) => (
-                        <div
+                        <motion.div
+                            variants={cardVariants}
                             key={r.title}
-                            className="bg-white rounded-2xl p-6 border border-orange-100 hover:-translate-y-1 hover:shadow-lg transition-all"
+                            whileHover={{ y: -8 }}
+                            className="bg-base-100/80 backdrop-blur-md rounded-3xl p-8 border border-white/50 shadow-xl shadow-base-200/50 hover:border-secondary/30 transition-colors"
                         >
-                            <span className="text-4xl">{r.emoji}</span>
-                            <h3 className="mt-3 text-lg font-bold text-gray-900">{r.title}</h3>
-                            <p className="mt-2 text-sm text-gray-600 leading-relaxed">{r.desc}</p>
-                        </div>
+                            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-base-200 to-base-100 flex items-center justify-center text-4xl shadow-inner mb-6">
+                                {r.emoji}
+                            </div>
+                            <h3 className="text-xl font-extrabold text-base-content mb-3">{r.title}</h3>
+                            <p className="text-base-content/70 leading-relaxed font-medium">{r.desc}</p>
+                        </motion.div>
                     ))}
-                </div>
+                </motion.div>
             </div>
         </section>
     );

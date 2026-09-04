@@ -81,6 +81,9 @@ export default function UpdatePetModal({ pet, isOpen, onClose, onUpdateSuccess }
 
   if (!isOpen || !pet) return null;
 
+  const inputClass = "w-full border border-base-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary bg-base-200 text-base-content";
+  const labelClass = "block mb-2 font-semibold text-base-content/70";
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
       <div className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-base-100 border border-base-300 rounded-2xl shadow-2xl p-6 sm:p-8">
@@ -88,17 +91,17 @@ export default function UpdatePetModal({ pet, isOpen, onClose, onUpdateSuccess }
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 rounded-full hover:bg-base-200 transition text-gray-400 hover:text-white"
+          className="absolute top-4 right-4 p-2 rounded-full hover:bg-base-200 transition text-base-content/50 hover:text-base-content"
         >
           <FiX className="text-xl" />
         </button>
 
-        <h2 className="text-2xl font-bold mb-6 text-center text-white">Update Pet Details</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center text-base-content">Update Pet Details</h2>
 
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Pet Name */}
           <div>
-            <label className="block mb-2 font-semibold text-gray-300">Pet Name</label>
+            <label className={labelClass}>Pet Name</label>
             <input
               type="text"
               name="petName"
@@ -106,19 +109,19 @@ export default function UpdatePetModal({ pet, isOpen, onClose, onUpdateSuccess }
               value={formData.petName}
               onChange={handleChange}
               placeholder="Enter pet name"
-              className="w-full border border-base-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary bg-base-200 text-white"
+              className={inputClass}
             />
           </div>
 
           {/* Species */}
           <div>
-            <label className="block mb-2 font-semibold text-gray-300">Species</label>
+            <label className={labelClass}>Species</label>
             <select
               name="species"
               required
               value={formData.species}
               onChange={handleChange}
-              className="w-full border border-base-300 rounded-xl text-white px-4 py-3 outline-none focus:ring-2 focus:ring-primary bg-base-200"
+              className={inputClass}
             >
               <option value="">Select Species</option>
               <option value="Dog">Dog</option>
@@ -130,7 +133,7 @@ export default function UpdatePetModal({ pet, isOpen, onClose, onUpdateSuccess }
 
           {/* Breed */}
           <div>
-            <label className="block mb-2 font-semibold text-gray-300">Breed</label>
+            <label className={labelClass}>Breed</label>
             <input
               type="text"
               name="breed"
@@ -138,13 +141,13 @@ export default function UpdatePetModal({ pet, isOpen, onClose, onUpdateSuccess }
               value={formData.breed}
               onChange={handleChange}
               placeholder="Enter breed"
-              className="w-full border border-base-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary bg-base-200 text-white"
+              className={inputClass}
             />
           </div>
 
           {/* Age */}
           <div>
-            <label className="block mb-2 font-semibold text-gray-300">Age (Years)</label>
+            <label className={labelClass}>Age (Years)</label>
             <input
               type="number"
               name="age"
@@ -152,19 +155,19 @@ export default function UpdatePetModal({ pet, isOpen, onClose, onUpdateSuccess }
               value={formData.age}
               onChange={handleChange}
               placeholder="Pet age"
-              className="w-full border border-base-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary bg-base-200 text-white"
+              className={inputClass}
             />
           </div>
 
           {/* Gender */}
           <div>
-            <label className="block mb-2 font-semibold text-gray-300">Gender</label>
+            <label className={labelClass}>Gender</label>
             <select
               name="gender"
               required
               value={formData.gender}
               onChange={handleChange}
-              className="w-full border border-base-300 rounded-xl text-white px-4 py-3 outline-none focus:ring-2 focus:ring-primary bg-base-200"
+              className={inputClass}
             >
               <option value="">Select Gender</option>
               <option value="Male">Male</option>
@@ -174,7 +177,7 @@ export default function UpdatePetModal({ pet, isOpen, onClose, onUpdateSuccess }
 
           {/* Image URL */}
           <div>
-            <label className="block mb-2 font-semibold text-gray-300">Image URL</label>
+            <label className={labelClass}>Image URL</label>
             <input
               type="url"
               name="image"
@@ -182,13 +185,13 @@ export default function UpdatePetModal({ pet, isOpen, onClose, onUpdateSuccess }
               value={formData.image}
               onChange={handleChange}
               placeholder="https://..."
-              className="w-full border border-base-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary bg-base-200 text-white"
+              className={inputClass}
             />
           </div>
 
           {/* Health Status */}
           <div>
-            <label className="block mb-2 font-semibold text-gray-300">Health Status</label>
+            <label className={labelClass}>Health Status</label>
             <input
               type="text"
               name="healthStatus"
@@ -196,13 +199,13 @@ export default function UpdatePetModal({ pet, isOpen, onClose, onUpdateSuccess }
               value={formData.healthStatus}
               onChange={handleChange}
               placeholder="Healthy / Injured"
-              className="w-full border border-base-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary bg-base-200 text-white"
+              className={inputClass}
             />
           </div>
 
           {/* Vaccination Status */}
           <div>
-            <label className="block mb-2 font-semibold text-gray-300">Vaccination Status</label>
+            <label className={labelClass}>Vaccination Status</label>
             <input
               type="text"
               name="vaccinationStatus"
@@ -210,13 +213,13 @@ export default function UpdatePetModal({ pet, isOpen, onClose, onUpdateSuccess }
               value={formData.vaccinationStatus}
               onChange={handleChange}
               placeholder="Vaccinated / Not Vaccinated"
-              className="w-full border border-base-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary bg-base-200 text-white"
+              className={inputClass}
             />
           </div>
 
           {/* Location */}
           <div>
-            <label className="block mb-2 font-semibold text-gray-300">Location</label>
+            <label className={labelClass}>Location</label>
             <input
               type="text"
               name="location"
@@ -224,13 +227,13 @@ export default function UpdatePetModal({ pet, isOpen, onClose, onUpdateSuccess }
               value={formData.location}
               onChange={handleChange}
               placeholder="City, Country"
-              className="w-full border border-base-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary bg-base-200 text-white"
+              className={inputClass}
             />
           </div>
 
           {/* Adoption Fee */}
           <div>
-            <label className="block mb-2 font-semibold text-gray-300">Adoption Fee ($)</label>
+            <label className={labelClass}>Adoption Fee ($)</label>
             <input
               type="number"
               name="adoptionFee"
@@ -238,13 +241,13 @@ export default function UpdatePetModal({ pet, isOpen, onClose, onUpdateSuccess }
               value={formData.adoptionFee}
               onChange={handleChange}
               placeholder="100"
-              className="w-full border border-base-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary bg-base-200 text-white"
+              className={inputClass}
             />
           </div>
 
           {/* Description */}
           <div className="md:col-span-2">
-            <label className="block mb-2 font-semibold text-gray-300">Description</label>
+            <label className={labelClass}>Description</label>
             <textarea
               name="description"
               rows="4"
@@ -252,7 +255,7 @@ export default function UpdatePetModal({ pet, isOpen, onClose, onUpdateSuccess }
               value={formData.description}
               onChange={handleChange}
               placeholder="Write pet details..."
-              className="w-full border border-base-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary bg-base-200 text-white text-sm"
+              className={`${inputClass} text-sm`}
             ></textarea>
           </div>
 
@@ -261,14 +264,14 @@ export default function UpdatePetModal({ pet, isOpen, onClose, onUpdateSuccess }
             <button
               type="button"
               onClick={onClose}
-              className="btn btn-outline border-base-300 text-white rounded-xl"
+              className="btn btn-outline border-base-300 rounded-xl"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="btn btn-primary text-white rounded-xl px-8"
+              className="btn btn-primary rounded-xl px-8"
             >
               {loading ? "Saving..." : "Update Pet"}
             </button>

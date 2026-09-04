@@ -82,16 +82,16 @@ export default function RequestsModal({ pet, isOpen, onClose, onRequestProcessed
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 rounded-full hover:bg-base-200 transition text-gray-400 hover:text-white"
+          className="absolute top-4 right-4 p-2 rounded-full hover:bg-base-200 transition text-base-content/50 hover:text-base-content"
         >
           <FiX className="text-xl" />
         </button>
 
         <div className="mb-6">
-          <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+          <h2 className="text-2xl font-bold text-base-content flex items-center gap-2">
             Adoption Requests
           </h2>
-          <p className="text-sm text-gray-400 mt-1">
+          <p className="text-sm text-base-content/60 mt-1">
             Review requests to adopt <span className="text-primary font-semibold">{pet.petName}</span>
           </p>
           {isAnyRequestApproved && (
@@ -105,13 +105,13 @@ export default function RequestsModal({ pet, isOpen, onClose, onRequestProcessed
         {loading ? (
           <div className="flex flex-col items-center justify-center py-12 space-y-3">
             <span className="loading loading-spinner loading-md text-primary"></span>
-            <p className="text-sm text-gray-500">Fetching requests...</p>
+            <p className="text-sm text-base-content/60">Fetching requests...</p>
           </div>
         ) : requests.length === 0 ? (
           <div className="text-center py-12 border border-dashed border-base-300 rounded-xl bg-base-200/50">
-            <FiAlertCircle className="mx-auto text-4xl text-gray-500 mb-2" />
-            <p className="font-semibold text-white">No requests found</p>
-            <p className="text-xs text-gray-500 mt-1">No one has requested to adopt this pet yet.</p>
+            <FiAlertCircle className="mx-auto text-4xl text-base-content/40 mb-2" />
+            <p className="font-semibold text-base-content">No requests found</p>
+            <p className="text-xs text-base-content/60 mt-1">No one has requested to adopt this pet yet.</p>
           </div>
         ) : (
           <div className="space-y-4">
@@ -123,24 +123,24 @@ export default function RequestsModal({ pet, isOpen, onClose, onRequestProcessed
                 {/* Request Info */}
                 <div className="space-y-2 flex-grow">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-semibold text-white flex items-center gap-1">
+                    <span className="font-semibold text-base-content flex items-center gap-1">
                       <FiUser className="text-primary" /> {request.userName}
                     </span>
-                    <span className="text-xs text-gray-500">|</span>
-                    <span className="text-sm text-gray-400 flex items-center gap-1">
+                    <span className="text-xs text-base-content/40">|</span>
+                    <span className="text-sm text-base-content/60 flex items-center gap-1">
                       <FiMail /> {request.userEmail}
                     </span>
                   </div>
 
-                  <p className="text-sm text-gray-400 flex items-center gap-1.5">
+                  <p className="text-sm text-base-content/60 flex items-center gap-1.5">
                     <FiCalendar className="text-accent" /> Pickup Date:{" "}
-                    <span className="font-medium text-white">{request.pickupDate}</span>
+                    <span className="font-medium text-base-content">{request.pickupDate}</span>
                   </p>
 
                   {request.message && (
-                    <div className="mt-2 text-xs text-gray-300 bg-base-300/40 p-3 rounded-lg border border-base-300">
-                      <strong className="block mb-1 text-gray-400">Applicant Message:</strong>
-                      <p className="italic">&quot;{request.message}&quot;</p>
+                    <div className="mt-2 text-xs text-base-content/70 bg-base-200 p-3 rounded-lg border border-base-300">
+                      <strong className="block mb-1 text-base-content/60">Applicant Message:</strong>
+                      <p className="italic">"{request.message}"</p>
                     </div>
                   )}
                 </div>
@@ -153,7 +153,7 @@ export default function RequestsModal({ pet, isOpen, onClose, onRequestProcessed
                         ? "badge-success text-white"
                         : request.status === "rejected"
                           ? "badge-error text-white"
-                          : "badge-warning text-white"
+                          : "badge-warning text-warning-content"
                       }`}
                   >
                     {request.status.toUpperCase()}
@@ -187,7 +187,7 @@ export default function RequestsModal({ pet, isOpen, onClose, onRequestProcessed
 
         {/* Footer */}
         <div className="flex justify-end pt-6 mt-6 border-t border-base-300">
-          <button onClick={onClose} className="btn btn-outline border-base-300 text-white rounded-xl">
+          <button onClick={onClose} className="btn btn-outline border-base-300 rounded-xl">
             Close
           </button>
         </div>

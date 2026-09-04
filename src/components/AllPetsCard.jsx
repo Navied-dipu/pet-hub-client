@@ -15,9 +15,9 @@ export default function AllPetsCard({ pet }) {
     location,
     description,
   } = pet;
-  // console.log(pet)
+
   return (
-    <div className="card w-80 bg-base-100 text-white shadow-xl border">
+    <div className="card w-80 bg-base-100 text-base-content shadow-xl border border-base-200">
 
       {/* Image */}
       <figure className="relative h-52 w-full">
@@ -39,11 +39,11 @@ export default function AllPetsCard({ pet }) {
 
         <div className="flex justify-between items-start">
           <div>
-            <h2 className="card-title text-lg">{petName}</h2>
-            <p className="text-sm text-gray-500">{breed}</p>
+            <h2 className="card-title text-lg text-base-content">{petName}</h2>
+            <p className="text-sm text-base-content/60">{breed}</p>
           </div>
 
-          <p className="text-xs text-gray-500 text-right">
+          <p className="text-xs text-base-content/60 text-right">
             {age} · {gender}
           </p>
         </div>
@@ -59,12 +59,12 @@ export default function AllPetsCard({ pet }) {
         </div>
 
         {/* Location */}
-        <p className="text-sm text-gray-500 mt-2">
+        <p className="text-sm text-base-content/60 mt-2">
           📍 {location}
         </p>
 
         {/* Description */}
-        <p className="text-sm text-gray-600 line-clamp-2">
+        <p className="text-sm text-base-content/70 line-clamp-2">
           {description}
         </p>
 

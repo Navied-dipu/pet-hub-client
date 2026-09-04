@@ -84,7 +84,7 @@ export default function MyListings({ user }) {
     return (
       <div className="flex flex-col items-center justify-center py-16 space-y-4">
         <span className="loading loading-spinner loading-lg text-primary"></span>
-        <p className="text-gray-500 font-medium">Loading your listings...</p>
+        <p className="text-base-content/60 font-medium">Loading your listings...</p>
       </div>
     );
   }
@@ -93,8 +93,8 @@ export default function MyListings({ user }) {
     <div className="w-full space-y-8 animate-fadeIn">
       {/* Title & Header */}
       <div>
-        <h2 className="text-3xl font-extrabold text-white">My Listed Pets</h2>
-        <p className="text-sm text-gray-400 mt-1">
+        <h2 className="text-3xl font-extrabold text-base-content">My Listed Pets</h2>
+        <p className="text-sm text-base-content/60 mt-1">
           Manage and track all the pets you have put up for adoption.
         </p>
       </div>
@@ -103,8 +103,8 @@ export default function MyListings({ user }) {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
         <div className="bg-base-100 p-6 rounded-2xl border border-base-300 shadow-md flex items-center justify-between">
           <div>
-            <span className="text-xs font-semibold text-gray-500 uppercase block">Total Listings</span>
-            <span className="text-3xl font-extrabold text-white mt-1 block">{totalListings}</span>
+            <span className="text-xs font-semibold text-base-content/50 uppercase block">Total Listings</span>
+            <span className="text-3xl font-extrabold text-base-content mt-1 block">{totalListings}</span>
           </div>
           <div className="bg-primary/20 p-3 rounded-xl text-primary">
             <FiInbox className="text-2xl" />
@@ -113,8 +113,8 @@ export default function MyListings({ user }) {
 
         <div className="bg-base-100 p-6 rounded-2xl border border-base-300 shadow-md flex items-center justify-between">
           <div>
-            <span className="text-xs font-semibold text-gray-500 uppercase block">Available</span>
-            <span className="text-3xl font-extrabold text-white mt-1 block">{availableCount}</span>
+            <span className="text-xs font-semibold text-base-content/50 uppercase block">Available</span>
+            <span className="text-3xl font-extrabold text-base-content mt-1 block">{availableCount}</span>
           </div>
           <div className="bg-info/20 p-3 rounded-xl text-info">
             <FiHeart className="text-2xl" />
@@ -123,8 +123,8 @@ export default function MyListings({ user }) {
 
         <div className="bg-base-100 p-6 rounded-2xl border border-base-300 shadow-md flex items-center justify-between">
           <div>
-            <span className="text-xs font-semibold text-gray-500 uppercase block">Adopted</span>
-            <span className="text-3xl font-extrabold text-white mt-1 block">{adoptedCount}</span>
+            <span className="text-xs font-semibold text-base-content/50 uppercase block">Adopted</span>
+            <span className="text-3xl font-extrabold text-base-content mt-1 block">{adoptedCount}</span>
           </div>
           <div className="bg-success/20 p-3 rounded-xl text-success">
             <FiCheckCircle className="text-2xl" />
@@ -135,9 +135,9 @@ export default function MyListings({ user }) {
       {/* Listings Cards Grid */}
       {pets.length === 0 ? (
         <div className="text-center py-16 bg-base-100 rounded-2xl border border-base-300 shadow-md">
-          <FiInbox className="text-5xl text-gray-600 mx-auto mb-3" />
-          <h3 className="text-xl font-bold text-white">No listings found</h3>
-          <p className="text-gray-500 mt-1 max-w-sm mx-auto text-sm">
+          <FiInbox className="text-5xl text-base-content/40 mx-auto mb-3" />
+          <h3 className="text-xl font-bold text-base-content">No listings found</h3>
+          <p className="text-base-content/60 mt-1 max-w-sm mx-auto text-sm">
             You haven't listed any pets for adoption yet. Head to the "Add Pet" section to create one.
           </p>
         </div>
@@ -170,9 +170,9 @@ export default function MyListings({ user }) {
               {/* Card Body */}
               <div className="p-5 flex-grow flex flex-col justify-between space-y-4">
                 <div>
-                  <h3 className="text-xl font-bold text-white leading-tight">{pet.petName}</h3>
+                  <h3 className="text-xl font-bold text-base-content leading-tight">{pet.petName}</h3>
                   <div className="flex justify-between items-center mt-2">
-                    <span className="text-xs text-gray-500 bg-base-200 px-2 py-1 rounded">
+                    <span className="text-xs text-base-content/50 bg-base-200 px-2 py-1 rounded">
                       {pet.species} · {pet.breed}
                     </span>
                     <span className="text-sm font-semibold text-success flex items-center gap-0.5">
@@ -189,7 +189,7 @@ export default function MyListings({ user }) {
                       setSelectedPet(pet);
                       setIsRequestsOpen(true);
                     }}
-                    className="btn btn-outline border-base-300 hover:bg-base-300 text-white btn-sm flex items-center justify-center gap-1.5 rounded-lg text-xs"
+                    className="btn btn-outline border-base-300 hover:bg-base-300 btn-sm flex items-center justify-center gap-1.5 rounded-lg text-xs"
                   >
                     <FiMessageSquare /> Requests
                   </button>
@@ -197,7 +197,7 @@ export default function MyListings({ user }) {
                   {/* View Details Button */}
                   <Link
                     href={`/allpets/${pet._id}`}
-                    className="btn btn-primary text-white btn-sm flex items-center justify-center gap-1.5 rounded-lg text-xs"
+                    className="btn btn-primary btn-sm flex items-center justify-center gap-1.5 rounded-lg text-xs"
                   >
                     <FiEye /> View Details
                   </Link>
@@ -259,17 +259,17 @@ export default function MyListings({ user }) {
           <div className="w-full max-w-md bg-base-100 border border-base-300 rounded-2xl shadow-2xl p-6 space-y-4">
             <div className="flex items-center gap-3 text-error">
               <FiAlertTriangle className="text-3xl" />
-              <h3 className="text-xl font-bold text-white">Delete Listing</h3>
+              <h3 className="text-xl font-bold text-base-content">Delete Listing</h3>
             </div>
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-base-content/70">
               Are you sure you want to permanently delete the listing for{" "}
-              <strong className="text-white">"{petToDelete.petName}"</strong>? This action cannot be
+              <strong className="text-base-content">"{petToDelete.petName}"</strong>? This action cannot be
               undone.
             </p>
             <div className="flex justify-end gap-3 pt-2">
               <button
                 onClick={() => setPetToDelete(null)}
-                className="btn btn-outline border-base-300 text-white rounded-lg btn-sm"
+                className="btn btn-outline border-base-300 rounded-lg btn-sm"
               >
                 Cancel
               </button>

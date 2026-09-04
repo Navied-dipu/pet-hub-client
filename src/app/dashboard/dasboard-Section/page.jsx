@@ -217,7 +217,7 @@ const DashboardPage = () => {
             <div className="space-y-4 pt-4 border-t border-base-200">
               <Link
                 href="/"
-                className="btn btn-outline border-base-300 text-white w-full flex items-center justify-center gap-2 rounded-xl"
+                className="btn btn-outline border-base-300 text-black w-full flex items-center justify-center gap-2 rounded-xl"
               >
                 <FiArrowLeft /> Back to Main Site
               </Link>
